@@ -6,33 +6,33 @@ public class PlayerControlCharacter : MonoBehaviour
 {
 
   Animator characterAnimator;
-  Rigidbody body;
+  Rigidbody2D body;
   float moveHorizontal;
   float moveVertical;
+  PlayerInput PlayerInput;
 
   // Start is called before the first frame update
   void Start()
   {
     characterAnimator = this.GetComponent<Animator>();
-    body = this.GetComponent<Rigidbody>();
+    body = this.GetComponent<Rigidbody2D>();
+    PlayerInput = this.GetComponent<PlayerInput>();
   }
 
   // Update is called once per frame
   void Update()
   {
-    if (Input.GetKey("left"))
+    if (PlayerInput.MoveLeft)
     {
       characterAnimator.SetInteger("State", 1);
     }
-    if (Input.GetKey("right"))
+    if (PlayerInput.MoveRight)
     {
       characterAnimator.SetInteger("State", 1);
     }
 
-    if (!Input.GetKey("left") &&
-        !Input.GetKey("up") &&
-        !Input.GetKey("right") &&
-        !Input.GetKey("down")
+    if (!PlayerInput.MoveLeft &&
+        !PlayerInput.MoveRight
         )
     {
       characterAnimator.SetInteger("State", 0);
@@ -66,19 +66,19 @@ public class PlayerControlCharacter : MonoBehaviour
     }
     if (moveHorizontal == 0 && moveVertical == 0)
     {
-      body.velocity = Vector3.zero;
-      body.angularVelocity = Vector3.zero;
+      body.velocity = Vector2.zero;
+      body.angularVelocity = 0;
     }
 
     //Use the two store floats to create a new Vector2 variable movement.
-    Vector3 movement = new Vector3(moveHorizontal, 0, moveVertical);
+    Vector2 movement = new Vector2(moveHorizontal, moveVertical);
 
     //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
     body.AddForce(movement * 10);
     if (Input.GetKeyDown("left ctrl"))
     {
       characterAnimator.SetTrigger("Attack1");
-      body.AddForce(new Vector3(1, 0, 0) * 20, ForceMode.Impulse);
+      body.AddForce(new Vector2(1, 0) * 20, ForceMode2D.Impulse);
     }
   }
 }
